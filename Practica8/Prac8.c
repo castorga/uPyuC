@@ -1,3 +1,8 @@
+//Practica 8 para utilizar los puertos del microcontrolador para mandar un byte a un arreglo de leds
+//Primera practica donde se utiliza avr-gcc
+//Similar a la practica 5b, pero se implementan mas cosas, como botones fisicos para poder incrementar el valor de nuestro dato
+//Tambien se implementan macros de ensamblador
+//Se aprende a configurar y utilizar los puertos del avr
 #include <avr/io.h>
 
 #define SetBitPort(port, bit) __asm__ ( "sbi %0, %1" : : "I" (_SFR_IO_ADDR(port)), "I" (bit) )

@@ -1,3 +1,5 @@
+//Practica 2 para repasar conocimientos de C
+//Programa que tenia que imprimir el numero decimal introducido en binario y hexadecimal e imprimirlos
 void putchar(char data);
 char getchar(void);
 void puts(char *str);

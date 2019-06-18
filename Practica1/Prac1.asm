@@ -1,3 +1,5 @@
+//Practica 1 para repasar conocimientos en ensamblador 8086
+//Programa que encuentra el n-esimo numero feo, el valor de n es almacenado en el registro CX
 .model small
     locals
 .data

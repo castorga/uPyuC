@@ -1,3 +1,6 @@
+;Practica 7 para hacer retardos mediante software
+;Se tomaban en cuenta la cantidad de ciclos que cada instruccion tomaba para hacer retardos precisos mediante calculos
+;Tambien para familiarizarse con el ensamblador del AVR
 .INCLUDE "m1280def.inc"
 
 loop:

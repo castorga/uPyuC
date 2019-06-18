@@ -1,3 +1,13 @@
+//Practica 10 hacer un reloj utilizando el Timer2 de la tarjeta T-Juino que utiliza el atMEGA1280
+//Lo mismo que la practica 5 pero sin los decodificadores y los LEDs
+//Se tenia que utilizar el T-Juino debido a que tiene un oscilador de 32,768 Hz que es muy utilizado en los relojes debido
+//a que es una potencia de dos y se utiliza para medir segundos con facilidad.
+//Se puede realizar en un mega2560 pero se le tiene que soldar un cristal, y no solo eso pero tambien se ocupan capacitores SMD
+//Debido a que no hay espacio en la misma tarjeta se puede agarrar una tarjeta de expansion vieja o inutil y romperla para tener
+//las conexiones de abajo y ahi se puede soldar y se conecta al micro mediante cables muy delgados pero hasta el momento no he tenido
+//suerte
+//Tambien se utiliza el Timer0 con el oscilador de 16 MHz con preescalador y el Timer en modo CTC para medir el desfase que existe
+//Entre los dos temporizadores
 #include <avr/io.h>
 #include "Timer0.h"
 #include "Timer2.h"

@@ -1,3 +1,5 @@
+//Practica 3 para probar el funcionamiento de decodificadores
+//Programa que probaba la funcionalidad de la memoria RAM estatica probando el ducto de datos y de direcciones
 void puts(char *String);
 void prueba_Bus_Datos(unsigned int direccion_base, unsigned int Offset);
 void prueba_Bus_Direcciones(unsigned int direccion_base, unsigned int offset_inicial, unsigned int Offset_Max);

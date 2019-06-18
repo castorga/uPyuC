@@ -1,4 +1,6 @@
+//Prac12
 //No la entregue porque me falto corregir el offset del ADC R.I.P!!!!!!!!!!!!!!!
+//Pero fuera de ahi sirve :d
 #include <avr/io.h>
 #include "UART.h"
 

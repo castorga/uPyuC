@@ -1,7 +1,8 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include "UART.h"
-/*
+
+ring_buffer_t Rx;
 ring_buffer_t Tx;
 
 uint8_t* UCSRA;
@@ -10,31 +11,32 @@ uint8_t* UCSRC;
 uint8_t* UBBRL;
 uint8_t* UBBRH;
 
-*/
-void UART0_putchar(char Data) {
-    while(!(UCSR0A & (1<<UDRE0)));
-    UDR0 = Data;
-}
+void UART_Ini(uint8_t com, uint16_t baudrate, uint8_t size, uint8_t parity, uint8_t stop) {
+    UCSRA = (uint8_t*)(0xC0 + (com * 8));
+	UCSRB = (uint8_t*)(0xC1 + (com * 8));
+	UCSRC = (uint8_t*)(0xC2 + (com * 8));
+	UBBRL = (uint8_t*)(0xC4 + (com * 8));
+	UBBRH = (uint8_t*)(0xC5 + (com * 8));
 
-char UART0_getchar() {
-	char Data;
-    while(!(UCSR0A & (1<<RXC0)));
-	Data = UDR0;
-    return Data;
-}
+	if(parity == 1) parity = 0b11;
+	if(parity == 2) parity = 0b10;
+	stop -= 1;
+	uint16_t UBBR = (((uint32_t)(Frecuencia) / (uint32_t)(16 * (uint32_t)baudrate)) - 1);
+	*UCSRB |= (1 << UDRIE0)|(1<<RXCIE0)|(0b11<<3);
+	*UCSRB |= (4&(size));    //Bits de datos para el 9
+	*UCSRC |= (2&(size)) << 1;   //Bits de datos normales
+	*UCSRC |= ((3&parity) << 4);	//Paridad
+	*UCSRC |= ((11&stop) << 3);	//Stop bits
+	*UBBRH = (uint8_t)(UBBR >> 8);
+	*UBBRL = (uint8_t)(UBBR);     
+    
+    Rx.in_idx = 0;
+    Tx.in_idx = 0;
+    Rx.out_idx = 0;
+    Tx.out_idx = 0;
 
-uint8_t UART0_available() {
-	return 1;
+    sei();
 }
-
-void UART0_Ini(void) {
-	UCSR0A |= 0b00000000;
-	UCSR0B |= 0b00011000;
-	UCSR0C |= 0b00111110;
-	UBRR0 = 0x67;
-	sei();
-}
-
 
 void UART0_AutoBaudRate( void ) {
     DDRE &= 0;
@@ -49,53 +51,6 @@ void UART0_AutoBaudRate( void ) {
 	TCNT0 = 0;
 }
 
-/*
-void UART_Ini(uint8_t com, uint16_t baudrate, uint8_t size, uint8_t parity, uint8_t stop) {
-    UCSRA = (uint8_t*)(0xC0 + (com * 8));
-	UCSRB = (uint8_t*)(0xC1 + (com * 8));
-	UCSRC = (uint8_t*)(0xC2 + (com * 8));
-	UBBRL = (uint8_t*)(0xC4 + (com * 8));
-	UBBRH = (uint8_t*)(0xC5 + (com * 8));
-
-	if(parity == 1) parity = 0b11;
-	if(parity == 2) parity = 0b10;
-	stop -= 1;
-
-    uint16_t UBBR = (((uint32_t)(Frecuencia) / (uint32_t)(16 * (uint32_t)baudrate)) - 1);
-	*UCSRB |= (1 << UDRIE0)|(1<<RXCIE0)|(0b11<<3);
-	*UCSRB |= (4&(size));    //Bits de datos para el 9
-	*UCSRC |= (2&(size)) << 1;   //Bits de datos normales
-	*UCSRC |= ((3&parity) << 4);	//Paridad
-	*UCSRC |= ((11&stop) << 3);	//Stop bits
-	*UBBRH = (uint8_t)(UBBR >> 8);
-	*UBBRL = (uint8_t)(UBBR);     
-    
-    Tx.in_idx = 0;
-    Tx.out_idx = 0;
-
-    sei();
-}
-
-void UART0_Ini(uint8_t size, uint8_t parity, uint8_t stop, uint8_t u2x) {
-	UCSR0A = 0|((u2x & 1)<<U2X0);
-
-}
-
-void UART0_AutoBaudRate(void) {
-    uint16_t tmp;
-    DDRE = 0;
-	PORTF = 1;
-	TCCR0A = 0;
-	TCCR0B = 2;
-	while((PINE & (1<<PE0)));
-	TCNT0 = 0;
-	while((PINE & 1) == 0);
-	TCCR0B = 0;
-    tmp = (TCNT0/2);
-	UBRR0 = tmp;
-    TCCR0B = 0;
-}
-
 ISR(USART0_UDRE_vect) {
     if(!buffer_empty(Tx)) {
 		Tx.out_idx = MOD(Tx.out_idx + 1);
@@ -106,8 +61,20 @@ ISR(USART0_UDRE_vect) {
     }
 }
 
+ISR(USART0_RX_vect) {
+	if(UART_Available()) {
+		Rx.in_idx = MOD(Rx.in_idx + 1);
+		Rx.Buffer[Rx.in_idx] = UDR0;
+	}
+}
 
-void UART0_putchar(char data) {
+uint8_t UART_Available(void) {
+    if(!buffer_full(Rx))
+		return 1;
+	return 0;
+}
+
+void UART_putchar(char data) {
     while(buffer_full(Tx));
 	if(buffer_empty(Tx)) {
 		Tx.in_idx = MOD(Tx.in_idx + 1);
@@ -118,9 +85,51 @@ void UART0_putchar(char data) {
     	Tx.Buffer[Tx.in_idx] = data;
 	}
 }
-*/
-void UART0_puts(char *str) {
-    while(*str) UART0_putchar(*str++);
+
+char UART_getchar(void) {
+	char data = 0;
+	while(buffer_empty(Rx));
+	Rx.out_idx = MOD(Rx.out_idx + 1);
+	data = Rx.Buffer[Rx.out_idx];
+	//UART_putchar(data);
+	return data;
+}
+
+void UART_puts(char *str) {
+    while(*str) UART_putchar(*str++);
+}
+
+void UART_gets(char *str) {
+    int i = 0;
+    char data;
+    data = UART_getchar();
+    while(data != 13) {
+        if(data == '\b') {
+            if(i > 0) {
+                UART_putchar('\b');
+				UART_putchar(' ');
+				UART_putchar('\b');
+                str[i] = 0;
+                i--;
+            }
+        } else {
+                if(i > 20) {
+                    UART_putchar(' ');
+					UART_putchar('\b');
+                } else if(data == 10) {
+                    UART_putchar('\r');
+                    break;
+                } else {
+					UART_putchar(data);
+                    str[i] = data;
+                    i++;
+                }
+            }
+        data = UART_getchar();
+    }
+	UART_putchar('\r');
+	UART_putchar('\n');
+    str[i] = 0;
 }
 
 void itoa(char *str, uint16_t number, uint8_t base) {
@@ -149,19 +158,4 @@ void itoa(char *str, uint16_t number, uint8_t base) {
         i++;
         j--;
     }
-}
-
-void clrscr() {
-	UART0_puts("\033[2J\033[H");
-}
-
-void gotoxy(int x, int y) {
-	UART0_putchar('\033');
-	UART0_putchar('[');
-	UART0_putchar(y/10 + '0');
-	UART0_putchar(y%10 + '0');
-	UART0_putchar(';');
-	UART0_putchar(x/10 + '0');
-	UART0_putchar(x%10 + '0');
-	UART0_putchar('H');
 }

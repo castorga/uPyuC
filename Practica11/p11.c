@@ -1,11 +1,13 @@
+//Practica 11 Tocar musica mediante el PWM del microcontrolador
+//Se utiliza el Timer0 para el tiempo de las notas y el Timer2 se utiliza en modo PWM para generar las notas
+//Se implementan botones fisicos para poder cambiar la musica
+//Agarre la musica de sans porque esta chistosa aunque no me gusta undertale 
 #include <avr/io.h>
 #include <avr/pgmspace.h>
 #include "UART.h"
 #include "Timer.h"
 
 uint8_t checkBtn(void);
-//#include <avr/pgmspace.h>
-//uint8_t checkBtn(void);
 #define UNDEFINED 0
 #define BtnNEXT 8
 #define BtnPREV 1

@@ -1,6 +1,8 @@
 //Practica 5 donde se programaba una rutina de interrupcion del 8088
 //Programa que tenia que imprimir un reloj en pantalla y al mismo tiempo realizar un decodificador a una sola direccion de memoria donde
 //se imprimia un valor para mandar a un arreglo de LEDs
+//Se implementaba una rutina de interrupcion que se llamaba cada 1/20 segundos y a las 20 veces una bandera se prendia para 
+//denotar que un segundo ha transcurrido
 #include "Timer.h"
 #define BYTE unsigned char
 #define WORD unsigned int

@@ -1,7 +1,7 @@
 //Practica 4 para probar el funcionamiento de decodificadores
 //Programa que probaba la funcionalidad de la memoria RAM estatica probando el ducto de datos y de direcciones
 //Modificado de la practica 3, que por el momento estos dos archivos son exactamente el mismo, pero el 3 es el que se tiene que cambiar
-//En esta practica se hacia lo mismo pero a cada alumno se le asignaban sus propias direcciones
+//En esta practica se hacia lo mismo pero a cada alumno se le asignaban sus propias direcciones e implementar direcciones espejo
 void puts(char *String);
 void prueba_Bus_Datos(unsigned int direccion_base, unsigned int Offset);
 void prueba_Bus_Direcciones(unsigned int direccion_base, unsigned int offset_inicial, unsigned int Offset_Max);

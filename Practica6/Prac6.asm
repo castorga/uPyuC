@@ -1,3 +1,6 @@
+;Practica 6 Voltear un numero de 32 bits almacenado en los registros del microcontrolador
+;Primer practica donde se utiliza directamente el microcontrolador atMEGA1280/2560
+;Para familiarizarse con el ensamblador del AVR
 .INCLUDE "m1280def.inc"
 .equ VALUE1 = 0xAA
 .equ VALUE2 = 0xC0

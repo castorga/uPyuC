@@ -1,3 +1,6 @@
+//Practica 9 comunicacion en serie mediante el UART0
+//Esencial para poder mandar informacion en forma de texto hacia una computadora
+//Esto es lo mismo que la practica 2, solo que sin el interprete y con colores
 #include <avr/io.h>
 #include "UART.h"
 

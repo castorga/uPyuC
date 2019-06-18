@@ -1,3 +1,6 @@
+//Practica 5b que consistia en utilizar los puertos del 8255 para mandar un dato
+//Debido a problemas con el interprete esta practica no me quedo muy bien
+//Pero teoricamente tuvo que haber funcionado y una practica futura (8) si sirvio bien con este metodo
 #define BYTE unsigned char
 #define WORD unsigned int
 
